@@ -18,8 +18,8 @@ const User=require("../../models/User")
 // @desc    Registe user
 // @access  Public
 router.post("/",userRegisterValidator,runValidation,async(req,res)=>{
-   const {name,email,password}=req.body;
- try{
+const {name,email,password,coolpa}=req.body;
+try{
   let user=await User.findOne({email})
   if(user){
       return res.json({errors:[{msg:"User already exists"}]});
@@ -49,11 +49,11 @@ const payload={
       if (err) throw err;
       res.json({ token:token});
     })
- }
- catch(err){
-   console.log(err)
-   res.status(400).json("Server Error")
- }
+}
+catch(err){
+  console.log(err)
+  res.status(400).json("Server Error")
+}
 })
 
 
