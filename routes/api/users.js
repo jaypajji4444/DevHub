@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 // validators
-const {userValidator}=require("../../validators/user")
+const {userRegisterValidator}=require("../../validators/user")
 const {runValidation}=require("../../validators/index")
 
 
@@ -14,11 +14,10 @@ const {runValidation}=require("../../validators/index")
 const User=require("../../models/User")
 
 
-
 // @route   Post api/users
 // @desc    Registe user
 // @access  Public
-router.post("/",userValidator,runValidation,async(req,res)=>{
+router.post("/",userRegisterValidator,runValidation,async(req,res)=>{
    const {name,email,password}=req.body;
  try{
   let user=await User.findOne({email})
@@ -48,7 +47,7 @@ const payload={
     { expiresIn: 360000 },
     (err, token) => {
       if (err) throw err;
-      res.json({ token:token,user:payload });
+      res.json({ token:token});
     })
  }
  catch(err){
