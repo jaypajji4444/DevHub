@@ -1,14 +1,14 @@
 const express = require('express');
-const request = require('request');
+//const request = require('request');
+const fetch=require("node-fetch")
 const config = require('config');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 // validators
-const { userExperienceValidator,profileValidator } = require("../../validators/user")
+const { userExperienceValidator, profileValidator, userEducationValidator } = require("../../validators/user")
 const { runValidation } = require("../../validators/index")
 // bring in normalize to give us a proper url, regardless of what user entered
 const normalize = require('normalize-url');
-
 const Profile = require("../../models/Profile")
 const User = require("../../models/User")
 const Post = require('../../models/Posts');
@@ -39,40 +39,7 @@ router.get('/me', auth, async (req, res) => {
 // @desc     Create or update user profile
 // @access   Private
 router.post("/", profileValidator, runValidation, auth, async (req, res) => {
-    // const {
-    //     company,
-    //     location,
-    //     website,
-    //     bio,
-    //     skills,
-    //     status,
-    //     githubusername,
-    //     youtube,
-    //     twitter,
-    //     instagram,
-    //     linkedin,
-    //     facebook
-    // } = req.body;
 
-    // const profileFields = {
-    //     user: req.user.id,
-    //     company,
-    //     location,
-    //     website: website === '' ? '' : normalize(website, { forceHttps: true }),
-    //     bio,
-    //     skills:skills,
-    //     status,
-    //     githubusername
-    // };
-
-    // // Build social object and add to profileFields
-    // const socialfields = { youtube, twitter, instagram, linkedin, facebook };
-
-    // for (const [key, value] of Object.entries(socialfields)) {
-    //     if (value.length > 0)
-    //         socialfields[key] = normalize(value, { forceHttps: true });
-    // }
-    // profileFields.social = socialfields;
     const profileFields = {};
     profileFields.user = req.user.id;
     if (req.body.handle) profileFields.handle = req.body.handle;
@@ -84,7 +51,7 @@ router.post("/", profileValidator, runValidation, auth, async (req, res) => {
     if (req.body.githubusername) profileFields.githubusername = req.body.githubusername;
     // Skills - Spilt into array
     if (typeof req.body.skills !== 'undefined') {
-      profileFields.skills = req.body.skills.split(',');
+        profileFields.skills = req.body.skills.split(',');
     }
     // Social (optional fields)
     profileFields.social = {};
@@ -101,8 +68,24 @@ router.post("/", profileValidator, runValidation, auth, async (req, res) => {
     catch (err) {
         res.status(500).json("server Error")
     }
-
 })
+
+// @route    GET api/profile
+// @desc     Get all profiles
+// @access   Public
+router.get('/', async (req, res) => {
+    try {
+        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+        res.json(profiles);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+
+
+
 
 // @route    GET api/profile/user/:user_id
 // @desc     Get profile by user ID
@@ -149,7 +132,7 @@ router.delete("/", auth, async (req, res) => {
 // @desc     Add profile experience
 // @access   Private
 
-router.post("/experience", auth, userExperienceValidator, runValidation, async (req, res) => {
+router.put("/experience", auth, userExperienceValidator, runValidation, async (req, res) => {
     const {
         title,
         company,
@@ -202,6 +185,73 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         return res.status(500).json({ msg: 'Server error' });
     }
 });
+
+
+// @route    PUT api/profile/education
+// @desc     Add profile education
+// @access   Private
+router.put("/education", auth, userEducationValidator, runValidation, async (req, res) => {
+    const {
+        school,
+        degree,
+        fieldofstudy,
+        from,
+        to,
+        current,
+        description
+    } = req.body;
+    const newEdu = {
+        school,
+        degree,
+        fieldofstudy,
+        from,
+        to,
+        current,
+        description
+    };
+    try {
+        const profile = await Profile.findOne({ user: req.user.id });
+        profile.education.unshift(newEdu);
+        await profile.save();
+        res.json(profile);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+})
+
+
+// @route    DELETE api/profile/education/:edu_id
+// @desc     Delete education from profile
+// @access   Private
+
+router.delete('/education/:edu_id', auth, async (req, res) => {
+    try {
+        const foundProfile = await Profile.findOne({ user: req.user.id });
+        foundProfile.education = foundProfile.education.filter(
+            edu => edu._id.toString() !== req.params.edu_id
+        );
+        await foundProfile.save();
+        return res.status(200).json(foundProfile);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ msg: 'Server error' });
+    }
+});
+
+
+// @route    GET api/profile/github/:username
+// @desc     Get user repos from Github
+// @access   Public
+router.get('/github/:username', async(req, res) => {
+    fetch(`https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc`)
+    .then(res => res.json())
+    .then(json => res.json(json))
+    .catch(err=>res.json(err))
+});
+
+
+
 
 
 module.exports = router

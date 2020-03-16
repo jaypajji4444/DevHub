@@ -1,5 +1,6 @@
 {
     "mongoURI": "mongodb+srv://jaypajji4444:jaymehta@1234@cluster0-cpb5h.mongodb.net/test?retryWrites=true&w=majority",
     "jwtSecret": "secret",
-    "githubToken": ""
+    "githubToken": "45cf125be8992a81025d",
+    "githubClientId":"031222e06b0eb8c46dc193ebe15da1c6c4f126a8"
 }

@@ -44,7 +44,7 @@ router.post("/",userLoginValidator,runValidation,async(req,res)=>{
             email:user.email
         }
 
-        jwt.sign(payload,config.get("jwtSecret"),{expiresIn:"360000"},(err,token)=>{
+        jwt.sign(payload,config.get("jwtSecret"),{expiresIn:86400*15},(err,token)=>{
             if(err)throw err;
             res.status(200).json({msg:"Login Successful",token:token})
         })
