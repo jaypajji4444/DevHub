@@ -49,3 +49,9 @@ exports.userExperienceValidator=[
       .isEmpty()
       .custom((value, { req }) => (req.body.to ? value < req.body.to : true))
   ]
+
+  exports.postValidator=[
+    check("text","Text is required")
+      .not()
+      .isEmpty()
+  ]
