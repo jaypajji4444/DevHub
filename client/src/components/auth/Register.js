@@ -36,7 +36,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             <h1 className='large text-primary'>Sign Up</h1>
             <p className='lead'>
                 <i className='fas fa-user' /> Create Your Account
-      </p>
+            </p>
             <form className='form' onSubmit={e => onSubmit(e)}>
                 <div className='form-group'>
                     <input
@@ -58,7 +58,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
                     <small className='form-text'>
                         This site uses Gravatar so if you want a profile image, use a
                         Gravatar email
-          </small>
+            </small>
                 </div>
                 <div className='form-group'>
                     <input
