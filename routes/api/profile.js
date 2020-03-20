@@ -39,7 +39,7 @@ router.get('/me', auth, async (req, res) => {
 // @desc     Create or update user profile
 // @access   Private
 router.post("/", profileValidator, runValidation, auth, async (req, res) => {
-
+    
     const profileFields = {};
     profileFields.user = req.user.id;
     if (req.body.handle) profileFields.handle = req.body.handle;
@@ -50,7 +50,8 @@ router.post("/", profileValidator, runValidation, auth, async (req, res) => {
     if (req.body.bio) profileFields.bio = req.body.bio;
     if (req.body.githubusername) profileFields.githubusername = req.body.githubusername;
     // Skills - Spilt into array
-    if (typeof req.body.skills !== 'undefined') {
+    //console.log(typeof(req.body.skills))
+    if (typeof(req.body.skills)===Object) {
         profileFields.skills = req.body.skills.split(',');
     }
     // Social (optional fields)
@@ -117,7 +118,7 @@ router.delete("/", auth, async (req, res) => {
         // Remove profile
         const profile = await Profile.remove({ user: req.user.id })
         // Remve User
-        const user = await Profile.remove({ user: req.user.id })
+        const user = await User.remove({ _id: req.user.id })
 
         res.json({ msg: 'User deleted' });
     }
