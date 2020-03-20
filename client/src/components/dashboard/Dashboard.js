@@ -60,7 +60,7 @@ const Dashboard = ({
                     deleteAccount: PropTypes.func.isRequired,
                     auth: PropTypes.object.isRequired,
                     profile: PropTypes.object.isRequired
-                  };
+                };
                 
                 export default connect(
                     mapStateToProps,
