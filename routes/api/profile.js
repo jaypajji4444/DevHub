@@ -94,7 +94,7 @@ router.get('/', async (req, res) => {
 router.get('/user/:user_id', async (req, res) => {
     try {
         console.log(req.params.user_id)
-        const profile = await Profile.findOne({ user: req.params.user_id })
+        const profile = await Profile.findOne({ user: req.params.user_id }).populate("user")
         if (!profile) {
             return res.json("No profile found")
         }

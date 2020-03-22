@@ -34,12 +34,13 @@ export const getProfiles = () => async dispatch => {
 
   try {
     const res = await axios.get('/api/profile');
-
+    console.log("fetch")
     dispatch({
       type: GET_PROFILES,
       payload: res.data
     });
   } catch (err) {
+    console.log(err)
     dispatch({
       type: PROFILE_ERROR,
       payload: { msg: err }

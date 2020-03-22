@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
-
+const morgan=require("morgan")
 const app = express();
 
 // Connect Database
@@ -9,7 +9,7 @@ connectDB();
 
 // Init Middleware
 app.use(express.json());
-
+app.use(morgan("dev"))
 // Define Routes
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));

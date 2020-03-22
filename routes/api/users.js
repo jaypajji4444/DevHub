@@ -31,7 +31,7 @@ try{
     d:"mm"
   })
   user=await new User({
-    name,email,password
+    name,email,password,avatar
   })
 
   const salt=await bcrypt.genSalt(10)
