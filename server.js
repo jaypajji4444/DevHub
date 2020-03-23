@@ -1,5 +1,5 @@
 const express = require('express');
-const connectDB = require('./config/db');
+const connectDB = require('./config/DB');
 const path = require('path');
 const morgan = require("morgan")
 const app = express();
