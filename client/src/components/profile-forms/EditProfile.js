@@ -30,9 +30,8 @@ const EditProfile = ({
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
   useEffect(() => {
-    // get current user profile and insert those in initial present state
     if (!profile) getCurrentProfile();
-    if (!loading && profile!==null) {
+    if (!loading) {
       const profileData = { ...initialState };
       for (const key in profile) {
         if (key in profileData) profileData[key] = profile[key];
@@ -64,6 +63,7 @@ const EditProfile = ({
 
   const onSubmit = e => {
     e.preventDefault();
+    console.log("hi")
     createProfile(formData, history, true);
   };
 
