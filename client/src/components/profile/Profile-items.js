@@ -11,7 +11,7 @@ const ProfileItem = ({
         skills
     }
 }) => {
-    console.log(user)
+
     return (
         <div className='profile bg-light'>
             <img src={user.avatar} alt='' className='round-img' />

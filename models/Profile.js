@@ -110,4 +110,5 @@ const ProfileSchema = new mongoose.Schema({
     }
 });
 
+ProfileSchema.index({status:"text",githubusername:"text","education.school":"text"})
 module.exports = Profile = mongoose.model('profile', ProfileSchema);

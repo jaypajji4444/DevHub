@@ -50,8 +50,10 @@ router.post("/", profileValidator, runValidation, auth, async (req, res) => {
     if (req.body.bio) profileFields.bio = req.body.bio;
     if (req.body.githubusername) profileFields.githubusername = req.body.githubusername;
     // Skills - Spilt into array
-    //console.log(typeof(req.body.skills))
-    if (typeof(req.body.skills)===Object) {
+    console.log(typeof(req.body.skills))
+    console.log(req.body.skills)
+    if (typeof(req.body.skills)==="string") {
+        console.log("hello")
         profileFields.skills = req.body.skills.split(',');
     }
     // Social (optional fields)
@@ -76,7 +78,9 @@ router.post("/", profileValidator, runValidation, auth, async (req, res) => {
 // @access   Public
 router.get('/', async (req, res) => {
     try {
-        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    
+        const profiles = await Profile.find().populate("user",["name","avatar"]);
+        
         res.json(profiles);
     } catch (err) {
         console.error(err.message);
